@@ -47,16 +47,30 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
 
     private fun addMessage(message: Message, sent: String) {
         message.sent = sent
-        _answers.postValue(message)
+        val cleanedMessage = cleanMessage(message)
+        _answers.postValue(cleanedMessage)
     }
 
     private fun addMessage(message: Message) {
-        _answers.postValue(message)
+        val cleanedMessage = cleanMessage(message)
+        _answers.postValue(cleanedMessage)
     }
 
 
     private fun setLastReceivedId(id: String) {
         lastReceivedMessageId = id
+    }
+
+    private fun cleanMessage(message: Message): Message {
+        val messageArray = message.message.split(" ")
+        messageArray.forEach { value ->
+            if (value.contains("^")) {
+                message.message = message.message.replace(value, "").replace("\\s+".toRegex(), " ")
+            }
+        }
+
+        return message
+
     }
 }
 

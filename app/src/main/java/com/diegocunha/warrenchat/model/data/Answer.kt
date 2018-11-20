@@ -7,7 +7,7 @@ data class Answer(val id: String,
                   val messages: List<Message>)
 
 data class Message(val type: String,
-                   @SerializedName("value") val message: String,
+                   @SerializedName("value") var message: String,
                    var sent: String) {
     companion object {
         const val USER = "user"
