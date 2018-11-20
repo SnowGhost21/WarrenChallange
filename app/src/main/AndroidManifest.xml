@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.diegocunha.warrenchat">
 
-  <uses-permission android:name="android.permission.INTERNET" />
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
   <application
       android:allowBackup="true"
@@ -14,7 +14,10 @@
       android:supportsRtl="true"
       android:name=".WarrenChatApplication"
       android:theme="@style/AppTheme">
-    <activity android:name=".view.MainActivity">
+    <activity
+        android:name=".view.MainActivity"
+        android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
+        android:windowSoftInputMode="stateHidden|adjustResize">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 

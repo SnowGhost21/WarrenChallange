@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="5dp">
+<layout>
+
+  <data>
+    <variable
+        name="viewModel"
+        type="com.diegocunha.warrenchat.view.home.MessageViewModel" />
+
+  </data>
+  <RelativeLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:paddingLeft="16dp"
+      android:paddingRight="16dp"
+      android:paddingTop="5dp">
 
     <TextView
-            android:id="@+id/receivedMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/bg_bubble_received"
-            android:maxWidth="240dp"
-            android:textIsSelectable="true"
-            android:textSize="16sp"
-            tools:text="Hello"/>
-</RelativeLayout>
+        android:id="@+id/receivedMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/bg_bubble_received"
+        android:maxWidth="240dp"
+        android:textIsSelectable="true"
+        android:textSize="16sp"
+        android:text="@{viewModel.receivedMessage}"
+        tools:text="Hello"/>
+  </RelativeLayout>
+</layout>

@@ -1,14 +1,13 @@
 package com.diegocunha.warrenchat.view.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.diegocunha.warrenchat.databinding.FragmentHomeBinding
-import iwsbrazil.io.artmuseum.extensions.observeOnce
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
@@ -18,8 +17,14 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        viewModel.initialMessage.observe(this, Observer {
-            Log.e("Message", it.messages[0].message)
+        val adapter = MessageAdapter()
+
+        binding.recyclerMessages.layoutManager = LinearLayoutManager(this.requireContext())
+        binding.recyclerMessages.adapter = adapter
+        binding.setLifecycleOwner(this)
+
+        viewModel.answers.observe(this, Observer {
+            adapter.setItem(it)
         })
 
         binding.sendMessage.setOnClickListener {
@@ -29,16 +34,11 @@ class HomeFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            sendMessage(message)
+            binding.message.setText("")
+            viewModel.sendMessage(message)
         }
 
 
         return binding.root
-    }
-
-    private fun sendMessage(message: String) {
-        viewModel.sendMessage(message).observeOnce(this, Observer {
-            Log.e("Message", it.messages[0].message)
-        })
     }
 }
