@@ -1,0 +1,9 @@
+<resources>
+  <string name="app_name">Warren Chat</string>
+
+  <string name="startMessage">Este é um aplicativo para vaga de desenvolvedor Android na Warren.\n Todos os direitos de imagem são reservados a mesma.</string>
+  <string name="developerName">Diego Cunha</string>
+  <string name="label_sent_message">Escreva sua mensagem</string>
+  <string name="label_sent">Enviar</string>
+
+</resources>
