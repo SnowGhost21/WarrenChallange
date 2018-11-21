@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
   <data>
+
     <variable
         name="viewModel"
-        type="com.diegocunha.warrenchat.view.home.MessageViewModel" />
+        type="com.diegocunha.warrenchat.view.home.MessageViewModel"/>
 
   </data>
+
   <RelativeLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
@@ -29,5 +31,38 @@
         android:textSize="16sp"
         android:text="@{viewModel.receivedMessage}"
         tools:text="Hello"/>
+
+    <LinearLayout
+        android:id="@+id/buttonsComponent"
+        visibleOrGone="@{viewModel.buttonAvailable}"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/receivedMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <Button
+          android:layout_marginEnd="8dp"
+          android:text="@{viewModel.buttonLeft.label.title}"
+          android:fontFamily="@font/roboto_medium"
+          android:textColor="@android:color/white"
+          android:background="@color/colorReceived"
+          android:layout_weight="1"
+          android:id="@+id/leftButton"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+
+      <Button
+          android:id="@+id/rightButton"
+          android:text="@{viewModel.buttonRight.label.title}"
+          android:fontFamily="@font/roboto_medium"
+          android:textColor="@android:color/white"
+          android:background="@color/colorReceived"
+          android:layout_weight="1"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"/>
+
+    </LinearLayout>
   </RelativeLayout>
 </layout>

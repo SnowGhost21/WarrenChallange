@@ -10,13 +10,14 @@ abstract class ReactiveAdapter<T, R : ViewDataBinding> : RecyclerView.Adapter<Re
     protected var items = ArrayList<T>()
 
     fun setItems(newItems: List<T>) {
-        items = ArrayList(newItems)
-        notifyDataSetChanged()
+        newItems.forEach {
+            setItem(it)
+        }
     }
 
     fun setItem(newItems: T) {
         items.add(newItems)
-        notifyDataSetChanged()
+        notifyItemInserted(items.indexOf(newItems))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

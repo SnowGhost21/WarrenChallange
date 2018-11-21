@@ -6,7 +6,5 @@ import io.reactivex.Single
 
 interface MessageRepository {
 
-    fun getInitialMessage(): Single<Answer>
-
     fun sendMessage(body: BodyMessage): Single<Answer>
 }

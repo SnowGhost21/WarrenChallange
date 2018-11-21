@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.diegocunha.warrenchat.model.data.Answer
 import com.diegocunha.warrenchat.model.data.BodyMessage
+import com.diegocunha.warrenchat.model.data.Button
 import com.diegocunha.warrenchat.model.data.Message
 import com.diegocunha.warrenchat.model.repository.MessageRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -13,8 +14,8 @@ import io.reactivex.schedulers.Schedulers
 
 class HomeViewModel constructor(private val repository: MessageRepository) : ViewModel() {
 
-    private val _answers = MutableLiveData<Message>()
-    val answers: LiveData<Message> = _answers
+    private val _answers = MutableLiveData<List<Message>>()
+    val answers: LiveData<List<Message>> = _answers
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
     private val answersHistoric = HashMap<String, Any>()
@@ -22,59 +23,79 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
     private var initialMessageDisposable: Disposable? = null
     private var sendMessageDisposable: Disposable? = null
 
-    init {
-        initChat()
-    }
-
     override fun onCleared() {
         super.onCleared()
         initialMessageDisposable?.dispose()
         sendMessageDisposable?.dispose()
     }
 
-    private fun initChat() {
-        initialMessageDisposable = repository.getInitialMessage()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
+    init {
+        initChat()
     }
 
-    private fun configureMessage(answer: Answer, sent: String) {
-        setLastReceivedId(answer.id)
-        answer.messages.forEach {
-            addMessage(it, sent)
-        }
+    private fun initChat() {
+        initialMessageDisposable = repository.sendMessage(BodyMessage(null, null))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
     }
 
     fun sendMessage(message: String) {
         val userMessage = Message("string", message, Message.USER)
         addMessage(userMessage)
-        updateHistoricy(message)
+        updateHistoric(message)
         val bodyMessage = BodyMessage(lastReceivedMessageId, answersHistoric)
 
         sendMessageDisposable = repository.sendMessage(bodyMessage)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
+    }
+
+    fun selectedOption(button: Button) {
+        updateHistoric(button.value)
+        val bodyMessage = BodyMessage(lastReceivedMessageId, answersHistoric)
+
+        sendMessageDisposable = repository.sendMessage(bodyMessage)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
+
+        val userMessage = Message("string", button.label.title, Message.USER)
+        addMessage(userMessage)
+    }
+
+    private fun configureMessage(answer: Answer, sent: String) {
+        setLastReceivedId(answer.id)
+        val messages = ArrayList<Message>()
+
+        answer.messages.forEachIndexed { position, message ->
+            message.sent = sent
+
+            if (position == answer.messages.lastIndex) {
+                message.buttons = answer.buttons
+            }
+
+            messages.add(cleanMessage(message))
+        }
+
+        addMessage(messages)
     }
 
     private fun setLastReceivedId(id: String) {
         lastReceivedMessageId = id
     }
 
-    private fun updateHistoricy(message: String) {
+    private fun updateHistoric(message: String) {
         answersHistoric[lastReceivedMessageId] = message
     }
 
-    private fun addMessage(message: Message, sent: String) {
-        message.sent = sent
-        val cleanedMessage = cleanMessage(message)
-        _answers.postValue(cleanedMessage)
+    private fun addMessage(message: List<Message>) {
+        _answers.postValue(message)
     }
 
     private fun addMessage(message: Message) {
-        val cleanedMessage = cleanMessage(message)
-        _answers.postValue(cleanedMessage)
+        _answers.postValue(listOf(message))
     }
 
     private fun cleanMessage(message: Message): Message {

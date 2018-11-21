@@ -21,16 +21,17 @@ class HomeFragment : Fragment(), View.OnLayoutChangeListener {
 
 
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
+
         binding.recyclerMessages.layoutManager = LinearLayoutManager(this.requireContext())
         binding.recyclerMessages.adapter = adapter
         binding.recyclerMessages.itemAnimator = DefaultItemAnimator()
         binding.recyclerMessages.addOnLayoutChangeListener(this)
 
-
         binding.setLifecycleOwner(this)
 
         viewModel.answers.observe(this, Observer {
-            adapter.setItem(it)
+            adapter.setItems(it)
         })
 
         binding.sendMessage.setOnClickListener {
@@ -44,6 +45,17 @@ class HomeFragment : Fragment(), View.OnLayoutChangeListener {
             viewModel.sendMessage(message)
         }
 
+        adapter.leftClick.observe(this, Observer {
+            if (it != null) {
+                viewModel.selectedOption(it)
+            }
+        })
+
+        adapter.rightClick.observe(this, Observer {
+            if (it != null) {
+                viewModel.selectedOption(it)
+            }
+        })
 
         return binding.root
     }
