@@ -36,11 +36,6 @@ class HomeViewModelTest {
 
     private val api = mock<WarrenAPI>()
 
-
-    @Before
-    fun setup() {
-    }
-
     @Test
     fun shouldStartConversation() {
         val repository = NetworkRepository(api)

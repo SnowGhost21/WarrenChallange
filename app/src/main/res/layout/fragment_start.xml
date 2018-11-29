@@ -7,34 +7,5 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent">
 
-    <TextView
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/startMessage"
-        android:gravity="center_horizontal"
-        android:textColor="@android:color/black"
-        android:textStyle="normal"
-        android:fontFamily="@font/roboto_medium"
-        android:layout_width="0dp"
-        android:textSize="16sp"
-        android:text="@string/startMessage"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginTop="240dp"/>
-
-    <TextView
-        android:fontFamily="@font/roboto_medium"
-        android:layout_marginTop="8dp"
-        android:gravity="center_horizontal"
-        android:text="@string/developerName"
-        android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@+id/startMessage"
-        android:id="@+id/developerTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"/>
-
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
