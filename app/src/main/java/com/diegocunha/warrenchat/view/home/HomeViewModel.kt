@@ -41,9 +41,9 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
     }
 
     fun sendMessage(message: String) {
-        val userMessage = Message("string", message, Message.USER)
-        addMessage(userMessage)
         updateHistoric(message)
+        val userMessage = Message("string", message, Message.USER, null, answersHistoric["question_name"].toString())
+        addMessage(userMessage)
         val bodyMessage = BodyMessage(lastReceivedMessageId, answersHistoric)
 
         sendMessageDisposable = repository.sendMessage(bodyMessage)

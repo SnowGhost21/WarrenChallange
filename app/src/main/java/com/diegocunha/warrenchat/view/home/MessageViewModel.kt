@@ -11,4 +11,6 @@ open class MessageViewModel(val message: Message) {
     val buttonLeft = if (buttonAvailable) message.buttons!![0] else null
 
     val buttonRight = if (buttonAvailable && message.buttons!!.size > 1) message.buttons!![1] else null
+
+    val userLetter = message.userName?.trim()?.first()
 }
