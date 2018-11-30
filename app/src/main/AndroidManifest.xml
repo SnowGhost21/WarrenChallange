@@ -13,10 +13,9 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:name=".WarrenChatApplication"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme.Splash">
     <activity
         android:name=".view.MainActivity"
-        android:theme="@style/AppTheme.Splash"
         android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
         android:windowSoftInputMode="stateHidden|adjustResize">
       <intent-filter>

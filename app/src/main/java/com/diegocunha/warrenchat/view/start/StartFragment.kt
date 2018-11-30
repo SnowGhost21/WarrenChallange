@@ -12,14 +12,7 @@ import com.diegocunha.warrenchat.R
 class StartFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        findNavController().navigate(R.id.action_startFragment_to_homeFragment)
         return inflater.inflate(R.layout.fragment_start, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        Handler().postDelayed({
-            findNavController().navigate(R.id.action_startFragment_to_homeFragment)
-        }, 10000)
     }
 }

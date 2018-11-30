@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.diegocunha.warrenchat.databinding.FragmentHomeBinding
-import com.diegocunha.warrenchat.view.commom.BaseFragment
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class HomeFragment : BaseFragment(), View.OnLayoutChangeListener {
+class HomeFragment : Fragment(), View.OnLayoutChangeListener {
 
     val viewModel: HomeViewModel by viewModel()
     private lateinit var binding: FragmentHomeBinding
@@ -20,8 +20,6 @@ class HomeFragment : BaseFragment(), View.OnLayoutChangeListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
-
-        configureToolbar(binding.toolbar)
 
         binding.recyclerMessages.layoutManager = LinearLayoutManager(this.requireContext())
         binding.recyclerMessages.adapter = adapter

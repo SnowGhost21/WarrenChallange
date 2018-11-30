@@ -23,13 +23,14 @@
     <item name="android:windowSoftInputMode">stateHidden|adjustResize</item>
   </style>
 
-  <style name="AppTheme.Splash" parent="AppTheme.NoActionBar">
-    <item name="android:backgroundDimEnabled">false</item>
-    <item name="android:windowIsTranslucent">true</item>
+  <style name="AppTheme.Splash" parent="AppTheme">
     <item name="android:windowBackground">@drawable/background</item>
-    <item name="android:windowContentOverlay">@null</item>
-    <item name="windowNoTitle">true</item>
 
+  </style>
+  
+  <style name="ToolbarTheme" parent="Theme.AppCompat.Light">
+    <item name="android:fontFamily">@font/roboto_medium</item>
+    <item name="android:textColor">@android:color/white</item>
   </style>
 
 
