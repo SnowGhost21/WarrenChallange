@@ -1,8 +1,13 @@
 package com.diegocunha.warrenchat.view.home
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.diegocunha.warrenchat.model.data.Message
 
 open class MessageViewModel(val message: Message) {
+
+    private val _userLetter = MutableLiveData<String>()
+    val userName: LiveData<String> = _userLetter
 
     val receivedMessage = message.message
 
@@ -12,5 +17,7 @@ open class MessageViewModel(val message: Message) {
 
     val buttonRight = if (buttonAvailable && message.buttons!!.size > 1) message.buttons!![1] else null
 
-    val userLetter = message.userName?.trim()?.first()
+    private val userLetter = message.userName?.let {
+        _userLetter.postValue(it.trim().first().toString())
+    }
 }

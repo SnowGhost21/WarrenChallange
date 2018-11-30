@@ -24,7 +24,7 @@
             android:background="@drawable/bg_circle_user"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center"
-            android:text="@{viewModel.userLetter}"
+            android:text="@{viewModel.userName}"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="20sp"
