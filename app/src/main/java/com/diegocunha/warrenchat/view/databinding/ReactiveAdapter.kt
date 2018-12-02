@@ -1,6 +1,7 @@
 package com.diegocunha.warrenchat.view.databinding
 
 import android.content.Context
+import android.os.Handler
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
@@ -8,9 +9,24 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class ReactiveAdapter<T, R : ViewDataBinding> : RecyclerView.Adapter<ReactiveAdapter<T, R>.ViewHolder>() {
 
     protected var items = ArrayList<T>()
+    private val handler = Handler()
+    protected lateinit var runnable: Runnable
 
     fun setItems(newItems: List<T>) {
+
+
         newItems.forEach {
+            runnable = object : Runnable {
+                override fun run() {
+                    setItem(it)
+
+                    if (!items.contains(it)) {
+                        handler.postDelayed(this, 300)
+                    }
+                }
+            }
+
+
             setItem(it)
         }
     }

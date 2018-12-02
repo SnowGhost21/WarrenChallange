@@ -51,6 +51,8 @@ class MessageAdapter : ReactiveAdapter<Message, ViewDataBinding>() {
                 _rightClick.postValue(item.buttons!![1])
                 binding.buttonsComponent.visibility = View.GONE
             }
+
+            binding.receivedMessage.animateText(viewModel.receivedMessage)
         }
     }
 
