@@ -7,14 +7,14 @@ import android.widget.TextView
 
 
 class TyperTextView @JvmOverloads constructor(
-        context: Context,
-        private val attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    private val attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : TextView(context, attrs, defStyleAttr) {
 
     lateinit var textSequence: CharSequence
     private var index: Int = 0
-    private var delay: Long = 150
+    private var delay: Long = 50
     private val handlerDelay = Handler()
 
     private val characterAdder = object : Runnable {

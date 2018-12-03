@@ -10,23 +10,9 @@ abstract class ReactiveAdapter<T, R : ViewDataBinding> : RecyclerView.Adapter<Re
 
     protected var items = ArrayList<T>()
     private val handler = Handler()
-    protected lateinit var runnable: Runnable
 
     fun setItems(newItems: List<T>) {
-
-
         newItems.forEach {
-            runnable = object : Runnable {
-                override fun run() {
-                    setItem(it)
-
-                    if (!items.contains(it)) {
-                        handler.postDelayed(this, 300)
-                    }
-                }
-            }
-
-
             setItem(it)
         }
     }
