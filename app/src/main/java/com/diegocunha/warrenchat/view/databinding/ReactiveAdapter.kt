@@ -11,7 +11,7 @@ abstract class ReactiveAdapter<T, R : ViewDataBinding> : RecyclerView.Adapter<Re
     protected var items = ArrayList<T>()
     private val handler = Handler()
 
-    fun setItems(newItems: List<T>) {
+    open fun setItems(newItems: List<T>) {
         newItems.forEach {
             setItem(it)
         }

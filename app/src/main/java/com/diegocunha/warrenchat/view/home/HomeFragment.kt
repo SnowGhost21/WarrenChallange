@@ -15,7 +15,7 @@ class HomeFragment : Fragment(), View.OnLayoutChangeListener {
 
     val viewModel: HomeViewModel by viewModel()
     private lateinit var binding: FragmentHomeBinding
-    private val adapter = MessageAdapter()
+    private val adapter = MessageAdapter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -52,6 +52,12 @@ class HomeFragment : Fragment(), View.OnLayoutChangeListener {
         adapter.rightClick.observe(this, Observer {
             if (it != null) {
                 viewModel.selectedOption(it)
+            }
+        })
+
+        adapter._isFinished.observe(this, Observer {
+            if (it == true) {
+                viewModel.getMessage(it)
             }
         })
 

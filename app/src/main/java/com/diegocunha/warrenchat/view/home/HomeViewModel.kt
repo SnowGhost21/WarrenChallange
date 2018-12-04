@@ -22,6 +22,7 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
     private var lastReceivedMessageId: String = ""
     private var initialMessageDisposable: Disposable? = null
     private var sendMessageDisposable: Disposable? = null
+    private val messagesToSent = ArrayList<Message>()
 
     override fun onCleared() {
         super.onCleared()
@@ -33,13 +34,6 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
         initChat()
     }
 
-    private fun initChat() {
-        initialMessageDisposable = repository.sendMessage(BodyMessage(null, null))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
-    }
-
     fun sendMessage(message: String) {
         updateHistoric(message)
         val userMessage = Message("string", message, Message.USER, null, answersHistoric["question_name"].toString())
@@ -49,6 +43,7 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
         sendMessageDisposable = repository.sendMessage(bodyMessage)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doAfterSuccess { getMessage(true) }
             .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
     }
 
@@ -59,11 +54,32 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
         sendMessageDisposable = repository.sendMessage(bodyMessage)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doAfterSuccess { getMessage(true) }
             .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
 
         val userMessage = Message("string", button.label.title, Message.USER)
         addMessage(userMessage)
     }
+
+    fun getMessage(isFinished: Boolean) {
+        if (messagesToSent.isEmpty()) {
+            return
+        }
+
+        val messageToSent = messagesToSent[0]
+        _answers.postValue(listOf(messageToSent))
+        messagesToSent.removeAt(0)
+
+    }
+
+    private fun initChat() {
+        initialMessageDisposable = repository.sendMessage(BodyMessage(null, null))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doAfterSuccess { getMessage(true) }
+            .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
+    }
+
 
     private fun configureMessage(answer: Answer, sent: String) {
         setLastReceivedId(answer.id)
@@ -91,7 +107,7 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
     }
 
     private fun addMessage(message: List<Message>) {
-        _answers.postValue(message)
+        messagesToSent.addAll(message)
     }
 
     private fun addMessage(message: Message) {
@@ -109,5 +125,7 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
         return message
 
     }
+
+
 }
 

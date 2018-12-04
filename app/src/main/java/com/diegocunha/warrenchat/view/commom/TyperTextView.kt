@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Handler
 import android.util.AttributeSet
 import android.widget.TextView
+import androidx.lifecycle.LiveData
+import com.diegocunha.warrenchat.extensions.mutableLiveDataOf
 
 
 class TyperTextView @JvmOverloads constructor(
@@ -16,6 +18,7 @@ class TyperTextView @JvmOverloads constructor(
     private var index: Int = 0
     private var delay: Long = 50
     private val handlerDelay = Handler()
+    val _isFinished = mutableLiveDataOf(false)
 
     private val characterAdder = object : Runnable {
         override fun run() {
@@ -23,6 +26,11 @@ class TyperTextView @JvmOverloads constructor(
 
             if (index <= textSequence.length) {
                 handlerDelay.postDelayed(this, delay)
+                _isFinished.postValue(false)
+            }
+
+            if (index == textSequence.length) {
+                _isFinished.postValue(true)
             }
         }
     }
