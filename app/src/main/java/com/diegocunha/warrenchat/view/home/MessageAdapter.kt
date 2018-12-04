@@ -31,8 +31,8 @@ class MessageAdapter constructor(val owner: LifecycleOwner) : ReactiveAdapter<Me
     private lateinit var context: Context
 
     companion object {
-        val USER = 0
-        val BOT = 1
+        const val USER = 0
+        const val BOT = 1
     }
 
     override fun getBinding(context: Context, parent: ViewGroup, viewType: Int): ViewDataBinding {
@@ -46,7 +46,6 @@ class MessageAdapter constructor(val owner: LifecycleOwner) : ReactiveAdapter<Me
 
     override fun bind(binding: ViewDataBinding, item: Message) {
         val viewModel = MessageViewModel(item)
-
         if (binding is ChatMessageSelfBinding) {
             binding.viewModel = viewModel
         } else if (binding is ChatMessageOtherBinding) {
@@ -62,7 +61,7 @@ class MessageAdapter constructor(val owner: LifecycleOwner) : ReactiveAdapter<Me
                 binding.buttonsComponent.visibility = View.GONE
             }
 
-            binding.receivedMessage.animateText(viewModel.receivedMessage)
+            binding.receivedMessage.createText(viewModel.receivedMessage)
             binding.receivedMessage._isFinished.observe(owner, observer)
         }
     }

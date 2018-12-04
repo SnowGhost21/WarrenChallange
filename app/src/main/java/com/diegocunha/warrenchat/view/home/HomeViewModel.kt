@@ -49,7 +49,7 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
         sendMessageDisposable = repository.sendMessage(bodyMessage)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doAfterSuccess { getMessage(true) }
+            .doAfterSuccess { getMessage() }
             .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
     }
 
@@ -60,7 +60,7 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
         sendMessageDisposable = repository.sendMessage(bodyMessage)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doAfterSuccess { getMessage(true) }
+            .doAfterSuccess { getMessage() }
             .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
 
         val userName = answersHistoric["question_name"].toString()
@@ -69,7 +69,7 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
         addMessage(userMessage)
     }
 
-    fun getMessage(isFinished: Boolean) {
+    fun getMessage() {
         if (messagesToSent.isEmpty()) {
             return
         }
@@ -84,7 +84,7 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
         initialMessageDisposable = repository.sendMessage(BodyMessage(null, null))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doAfterSuccess { getMessage(true) }
+            .doAfterSuccess { getMessage() }
             .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
     }
 
@@ -96,10 +96,9 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
         if (answer.inputs.isNotEmpty()) {
             val input = answer.inputs[0]
 
-            //textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
             _inputType.postValue(
                 when (input.type) {
-                    "number" -> if (input.mask == "currency") InputType.TYPE_NUMBER_FLAG_DECIMAL else InputType.TYPE_CLASS_NUMBER
+                    "number" -> InputType.TYPE_CLASS_NUMBER
                     "string" -> InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
                     else -> InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
                 }

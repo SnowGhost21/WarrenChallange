@@ -1,9 +1,12 @@
 package com.diegocunha.warrenchat.view.home
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -39,8 +42,7 @@ class HomeFragment : Fragment(), View.OnLayoutChangeListener {
                 return@setOnClickListener
             }
 
-            binding.message.setText("")
-            viewModel.sendMessage(message)
+            sendMessage(message)
         }
 
         adapter.leftClick.observe(this, Observer {
@@ -56,12 +58,22 @@ class HomeFragment : Fragment(), View.OnLayoutChangeListener {
         })
 
         adapter._isFinished.observe(this, Observer {
-            if (it == true) {
-                viewModel.getMessage(it)
+            if (it != null) {
+                binding.sendMessage.isEnabled = it
+                if (it == true) {
+                    viewModel.getMessage()
+                }
             }
+
+
         })
 
         return binding.root
+    }
+
+    private fun sendMessage(message: String) {
+        binding.message.setText("")
+        viewModel.sendMessage(message)
     }
 
     override fun onLayoutChange(p0: View?, p1: Int, p2: Int, p3: Int, p4: Int, p5: Int, p6: Int, p7: Int, p8: Int) {
