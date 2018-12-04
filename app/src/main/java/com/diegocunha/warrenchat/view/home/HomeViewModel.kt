@@ -57,7 +57,8 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
             .doAfterSuccess { getMessage(true) }
             .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
 
-        val userMessage = Message("string", button.label.title, Message.USER)
+        val userMessage =
+            Message("string", button.label.title, Message.USER, null, answersHistoric["question_name"].toString())
         addMessage(userMessage)
     }
 
