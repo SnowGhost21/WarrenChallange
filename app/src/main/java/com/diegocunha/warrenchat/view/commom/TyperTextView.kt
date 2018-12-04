@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Handler
 import android.util.AttributeSet
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import com.diegocunha.warrenchat.extensions.mutableLiveDataOf
 
 
@@ -19,28 +18,58 @@ class TyperTextView @JvmOverloads constructor(
     private var delay: Long = 50
     private val handlerDelay = Handler()
     val _isFinished = mutableLiveDataOf(false)
+    var textSequenceToDelete: CharSequence = ""
+    var isFinished = false
 
-    private val characterAdder = object : Runnable {
+    private val characterController = object : Runnable {
         override fun run() {
-            text = textSequence.subSequence(0, index++)
+            if (!textSequenceToDelete.isEmpty()) {
+                if (index <= textSequenceToDelete.length && !isFinished) {
+                    text = textSequenceToDelete.subSequence(0, index++)
+                    handlerDelay.postDelayed(this, delay)
+                    isFinished = index == textSequenceToDelete.length
+                    _isFinished.postValue(false)
+                } else {
+                    val txt = textSequenceToDelete.substring(0, index--)
+                    textSequenceToDelete = txt
+                    text = txt
+                    handlerDelay.postDelayed(this, delay)
+                }
 
-            if (index <= textSequence.length) {
-                handlerDelay.postDelayed(this, delay)
-                _isFinished.postValue(false)
+                if (index < 0) {
+                    index = 0
+                }
+
+
+            } else {
+                text = textSequence.subSequence(0, index++)
+
+                if (index <= textSequence.length) {
+                    handlerDelay.postDelayed(this, delay)
+                    _isFinished.postValue(false)
+                }
+
+                if (index == textSequence.length) {
+                    _isFinished.postValue(true)
+                }
             }
 
-            if (index == textSequence.length) {
-                _isFinished.postValue(true)
-            }
+
         }
     }
 
     fun animateText(txt: CharSequence) {
-        textSequence = txt
+        if (txt.contains("<erase>")) {
+            textSequenceToDelete = txt.split("<erase>")[0].trim()
+            textSequence = txt.split("<erase>")[1].trim()
+        } else {
+            textSequence = txt
+        }
+
         index = 0
         text = null
-        handlerDelay.removeCallbacks(characterAdder)
-        handlerDelay.postDelayed(characterAdder, delay)
+        handlerDelay.removeCallbacks(characterController)
+        handlerDelay.postDelayed(characterController, delay)
     }
 
 }

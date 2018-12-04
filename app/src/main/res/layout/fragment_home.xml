@@ -59,7 +59,7 @@
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/roboto_medium"
                 android:hint="@string/label_sent_message"
-                android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine" />
+                android:inputType="@{viewModel.inputyType}" />
 
             <Button
                 android:id="@+id/sendMessage"

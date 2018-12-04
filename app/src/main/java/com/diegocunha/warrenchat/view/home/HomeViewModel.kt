@@ -1,8 +1,10 @@
 package com.diegocunha.warrenchat.view.home
 
+import android.text.InputType
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.diegocunha.warrenchat.extensions.mutableLiveDataOf
 import com.diegocunha.warrenchat.model.data.Answer
 import com.diegocunha.warrenchat.model.data.BodyMessage
 import com.diegocunha.warrenchat.model.data.Button
@@ -23,6 +25,9 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
     private var initialMessageDisposable: Disposable? = null
     private var sendMessageDisposable: Disposable? = null
     private val messagesToSent = ArrayList<Message>()
+    private val _inputType =
+        mutableLiveDataOf(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_AUTO_CORRECT)
+    val inputyType: LiveData<Int> = _inputType
 
     override fun onCleared() {
         super.onCleared()
@@ -36,7 +41,8 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
 
     fun sendMessage(message: String) {
         updateHistoric(message)
-        val userMessage = Message("string", message, Message.USER, null, answersHistoric["question_name"].toString())
+        val userName = answersHistoric["question_name"].toString()
+        val userMessage = Message("string", message, Message.USER, null, userName)
         addMessage(userMessage)
         val bodyMessage = BodyMessage(lastReceivedMessageId, answersHistoric)
 
@@ -57,8 +63,9 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
             .doAfterSuccess { getMessage(true) }
             .subscribe({ configureMessage(it, Message.BOT) }, { _error.postValue(it.message) })
 
+        val userName = answersHistoric["question_name"].toString()
         val userMessage =
-            Message("string", button.label.title, Message.USER, null, answersHistoric["question_name"].toString())
+            Message("string", button.label.title, Message.USER, null, userName)
         addMessage(userMessage)
     }
 
@@ -85,6 +92,21 @@ class HomeViewModel constructor(private val repository: MessageRepository) : Vie
     private fun configureMessage(answer: Answer, sent: String) {
         setLastReceivedId(answer.id)
         val messages = ArrayList<Message>()
+
+        if (answer.inputs.isNotEmpty()) {
+            val input = answer.inputs[0]
+
+            //textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
+            _inputType.postValue(
+                when (input.type) {
+                    "number" -> if (input.mask == "currency") InputType.TYPE_NUMBER_FLAG_DECIMAL else InputType.TYPE_CLASS_NUMBER
+                    "string" -> InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
+                    else -> InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
+                }
+            )
+        } else {
+            _inputType.postValue(InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE or InputType.TYPE_TEXT_FLAG_AUTO_CORRECT)
+        }
 
         answer.messages.forEachIndexed { position, message ->
             message.sent = sent
