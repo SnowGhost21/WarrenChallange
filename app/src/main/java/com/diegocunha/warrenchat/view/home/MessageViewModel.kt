@@ -1,8 +1,13 @@
 package com.diegocunha.warrenchat.view.home
 
+import androidx.lifecycle.LiveData
+import com.diegocunha.warrenchat.extensions.mutableLiveDataOf
 import com.diegocunha.warrenchat.model.data.Message
 
 open class MessageViewModel(val message: Message) {
+
+    private val _userLetter = mutableLiveDataOf(message.userName?.first().toString())
+    val userName: LiveData<String> = _userLetter
 
     val receivedMessage = message.message
 

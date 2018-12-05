@@ -19,7 +19,7 @@
       android:paddingRight="16dp"
       android:paddingTop="5dp">
 
-    <TextView
+    <com.diegocunha.warrenchat.view.commom.TyperTextView
         android:id="@+id/receivedMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +29,6 @@
         android:maxWidth="240dp"
         android:textIsSelectable="true"
         android:textSize="16sp"
-        android:text="@{viewModel.receivedMessage}"
         tools:text="Hello"/>
 
     <LinearLayout

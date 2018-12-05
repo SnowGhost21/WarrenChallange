@@ -14,7 +14,8 @@ data class Message(
     val type: String,
     @SerializedName("value") var message: String,
     var sent: String,
-    var buttons: List<Button>? = emptyList()
+    var buttons: List<Button>? = emptyList(),
+    var userName: String? = null
 ) {
     companion object {
         const val USER = "user"
